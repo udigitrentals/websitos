@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Navigation Menu() {
+export default function Navbar() {
   return (
     <nav role="navigation" aria-label="Main Navigation">
       <ul>
