@@ -16,14 +16,14 @@ jobs:
         language: [node, python]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       # ----------------------
-      # Node.js (WebsiteOS)
+      # Node.js (WebsiteOS V2)
       # ----------------------
       - name: Setup Node.js
         if: matrix.language == 'node'
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: "npm"
@@ -46,23 +46,26 @@ jobs:
         if: matrix.language == 'node'
         run: npm run format:check
 
-      - name: Run Jest tests with coverage + JSON output
+      - name: Run Jest with coverage + JSON report
         if: matrix.language == 'node'
-        run: npx jest --json --outputFile=jest-report.json --coverage --coverageReporters=json-summary
+        run: npx jest --json --outputFile=jest-report.json --coverage --coverageReporters=json-summary --coverageReporters=lcov
 
       - name: Upload Jest test report
         if: matrix.language == 'node'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: jest-report
           path: jest-report.json
 
       - name: Upload Jest coverage
         if: matrix.language == 'node'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: jest-coverage
-          path: coverage/
+          path: |
+            coverage/
+            coverage/lcov.info
+            coverage/coverage-summary.json
 
       - name: Verify log files exist
         if: matrix.language == 'node'
@@ -96,11 +99,11 @@ jobs:
           fi
 
       # ----------------------
-      # Python (API backend)
+      # Python (FastAPI Backend)
       # ----------------------
       - name: Setup Python
         if: matrix.language == 'python'
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
           cache: 'pip'
@@ -113,18 +116,18 @@ jobs:
 
       - name: Run pytest with coverage + JSON report
         if: matrix.language == 'python'
-        run: pytest --json-report --json-report-file=pytest-report.json --cov=. --cov-report=xml
+        run: pytest --json-report --json-report-file=pytest-report.json --cov=.
 
-      - name: Upload pytest report
+      - name: Upload pytest test report
         if: matrix.language == 'python'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: pytest-report
           path: pytest-report.json
 
       - name: Upload pytest coverage
         if: matrix.language == 'python'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: pytest-coverage
-          path: coverage.xml
+          path: .coverage
