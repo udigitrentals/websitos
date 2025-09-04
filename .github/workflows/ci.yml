@@ -46,16 +46,23 @@ jobs:
         if: matrix.language == 'node'
         run: npm run format:check
 
-      - name: Run Jest tests with JSON output
+      - name: Run Jest tests with coverage + JSON output
         if: matrix.language == 'node'
-        run: npx jest --json --outputFile=jest-report.json
+        run: npx jest --json --outputFile=jest-report.json --coverage --coverageReporters=json-summary
 
-      - name: Upload Jest report
+      - name: Upload Jest test report
         if: matrix.language == 'node'
         uses: actions/upload-artifact@v3
         with:
           name: jest-report
           path: jest-report.json
+
+      - name: Upload Jest coverage
+        if: matrix.language == 'node'
+        uses: actions/upload-artifact@v3
+        with:
+          name: jest-coverage
+          path: coverage/
 
       - name: Verify log files exist
         if: matrix.language == 'node'
@@ -102,11 +109,11 @@ jobs:
         if: matrix.language == 'python'
         run: |
           pip install -r requirements.txt
-          pip install pytest pytest-json-report
+          pip install pytest pytest-json-report pytest-cov
 
-      - name: Run pytest with JSON report
+      - name: Run pytest with coverage + JSON report
         if: matrix.language == 'python'
-        run: pytest --json-report --json-report-file=pytest-report.json
+        run: pytest --json-report --json-report-file=pytest-report.json --cov=. --cov-report=xml
 
       - name: Upload pytest report
         if: matrix.language == 'python'
@@ -114,3 +121,10 @@ jobs:
         with:
           name: pytest-report
           path: pytest-report.json
+
+      - name: Upload pytest coverage
+        if: matrix.language == 'python'
+        uses: actions/upload-artifact@v3
+        with:
+          name: pytest-coverage
+          path: coverage.xml
