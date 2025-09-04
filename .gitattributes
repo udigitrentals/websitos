@@ -1,0 +1,20 @@
+# Auto-detect text files and enforce LF line endings
+* text=auto eol=lf
+
+# Explicitly enforce LF for key file types
+*.ts text eol=lf
+*.tsx text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.md text eol=lf
+
+# Keep binary files untouched
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.zip binary
+*.exe binary
