@@ -93,8 +93,10 @@ jobs:
 
       - name: Install Python deps
         if: matrix.language == 'python'
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
+          pip install pytest
 
-      - name: Run Python check
+      - name: Run pytest
         if: matrix.language == 'python'
-        run: python -m py_compile api.py
+        run: pytest -q
