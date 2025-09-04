@@ -1,0 +1,65 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # Install dependencies
+      - run: npm install
+
+      # TypeScript type-check
+      - run: npm run type-check
+
+      # ESLint linting
+      - run: npm run lint
+
+      # Jest tests
+      - run: npm test
+
+      # ✅ Verify required log files exist
+      - name: Verify log files exist
+        run: |
+          required_files=(
+            "docs/meta/health.md"
+            "docs/meta/lineage.md"
+            "docs/meta/myth_cycles.md"
+            "docs/meta/reconciliations.md"
+            "docs/meta/archetypes.md"
+            "docs/meta/bias.md"
+            "docs/meta/drag.md"
+            "docs/meta/translations.log"
+            "docs/meta/gardening/phase1.md"
+            "docs/meta/gardening/phase6.md"
+            "docs/meta/archive/history/README.md"
+            "docs/meta/myth_library.md"
+          )
+
+          missing=false
+          for file in "${required_files[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "❌ Missing required log file: $file"
+              missing=true
+            else
+              echo "✅ Found $file"
+            fi
+          done
+
+          if [ "$missing" = true ]; then
+            echo "One or more required log files are missing."
+            exit 1
+          fi
+
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build Docker image
+        run: docker build -t website-os-v2 .
