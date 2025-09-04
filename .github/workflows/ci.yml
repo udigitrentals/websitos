@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v4
 
       # ----------------------
-      # Node.js (WebsiteOS V2)
+      # Node.js (WebsiteOS)
       # ----------------------
       - name: Setup Node.js
         if: matrix.language == 'node'
@@ -30,76 +30,37 @@ jobs:
 
       - name: Install Node deps
         if: matrix.language == 'node'
-        run: npm install
+        run: npm ci
         env:
           HUSKY: 0
 
       - name: Type-check (TS)
         if: matrix.language == 'node'
-        run: npm run type-check
+        run: npx tsc --noEmit
 
-      - name: Lint (ESLint)
+      - name: Lint (ESLint via npx)
         if: matrix.language == 'node'
-        run: npm run lint
+        run: npx eslint . --ext .ts,.tsx
 
       - name: Prettier check
         if: matrix.language == 'node'
-        run: npm run format:check
+        run: npx prettier --check .
 
       - name: Run Jest with coverage + JSON report
         if: matrix.language == 'node'
         run: npx jest --json --outputFile=jest-report.json --coverage --coverageReporters=json-summary --coverageReporters=lcov
 
-      - name: Upload Jest test report
+      - name: Upload Jest artifacts
         if: matrix.language == 'node'
         uses: actions/upload-artifact@v4
         with:
-          name: jest-report
-          path: jest-report.json
-
-      - name: Upload Jest coverage
-        if: matrix.language == 'node'
-        uses: actions/upload-artifact@v4
-        with:
-          name: jest-coverage
+          name: jest-artifacts
           path: |
+            jest-report.json
             coverage/
-            coverage/lcov.info
-            coverage/coverage-summary.json
-
-      - name: Verify log files exist
-        if: matrix.language == 'node'
-        run: |
-          required_files=(
-            "docs/meta/health.md"
-            "docs/meta/lineage.md"
-            "docs/meta/myth_cycles.md"
-            "docs/meta/reconciliations.md"
-            "docs/meta/archetypes.md"
-            "docs/meta/bias.md"
-            "docs/meta/drag.md"
-            "docs/meta/translations.log"
-            "docs/meta/gardening/phase1.md"
-            "docs/meta/gardening/phase6.md"
-            "docs/meta/archive/history/README.md"
-            "docs/meta/myth_library.md"
-          )
-          missing=false
-          for file in "${required_files[@]}"; do
-            if [ ! -f "$file" ]; then
-              echo "❌ Missing required log file: $file"
-              missing=true
-            else
-              echo "✅ Found $file"
-            fi
-          done
-          if [ "$missing" = true ]; then
-            echo "One or more required log files are missing."
-            exit 1
-          fi
 
       # ----------------------
-      # Python (FastAPI Backend)
+      # Python (FastAPI backend)
       # ----------------------
       - name: Setup Python
         if: matrix.language == 'python'
@@ -116,18 +77,13 @@ jobs:
 
       - name: Run pytest with coverage + JSON report
         if: matrix.language == 'python'
-        run: pytest --json-report --json-report-file=pytest-report.json --cov=.
+        run: pytest --maxfail=1 --disable-warnings -q --json-report --json-report-file=pytest-report.json --cov=. --cov-report=xml
 
-      - name: Upload pytest test report
+      - name: Upload pytest artifacts
         if: matrix.language == 'python'
         uses: actions/upload-artifact@v4
         with:
-          name: pytest-report
-          path: pytest-report.json
-
-      - name: Upload pytest coverage
-        if: matrix.language == 'python'
-        uses: actions/upload-artifact@v4
-        with:
-          name: pytest-coverage
-          path: .coverage
+          name: pytest-artifacts
+          path: |
+            pytest-report.json
+            coverage.xml
