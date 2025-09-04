@@ -1,4 +1,38 @@
-﻿.venv/
+# ------------------------
+# Python
+# ------------------------
+.venv/
 .env
+.env.local
+.env.test
+.env.production
 __pycache__/
 *.pyc
+
+# ------------------------
+# Node / TypeScript
+# ------------------------
+node_modules/
+dist/
+coverage/
+.nyc_output/
+*.tsbuildinfo
+.jest/
+
+# ------------------------
+# Logs
+# ------------------------
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ------------------------
+# OS / Editor Files
+# ------------------------
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
