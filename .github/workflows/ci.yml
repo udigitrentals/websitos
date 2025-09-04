@@ -46,9 +46,16 @@ jobs:
         if: matrix.language == 'node'
         run: npm run format:check
 
-      - name: Run Jest tests
+      - name: Run Jest tests with JSON output
         if: matrix.language == 'node'
-        run: npm test
+        run: npx jest --json --outputFile=jest-report.json
+
+      - name: Upload Jest report
+        if: matrix.language == 'node'
+        uses: actions/upload-artifact@v3
+        with:
+          name: jest-report
+          path: jest-report.json
 
       - name: Verify log files exist
         if: matrix.language == 'node'
@@ -95,8 +102,15 @@ jobs:
         if: matrix.language == 'python'
         run: |
           pip install -r requirements.txt
-          pip install pytest
+          pip install pytest pytest-json-report
 
-      - name: Run pytest
+      - name: Run pytest with JSON report
         if: matrix.language == 'python'
-        run: pytest -q
+        run: pytest --json-report --json-report-file=pytest-report.json
+
+      - name: Upload pytest report
+        if: matrix.language == 'python'
+        uses: actions/upload-artifact@v3
+        with:
+          name: pytest-report
+          path: pytest-report.json
