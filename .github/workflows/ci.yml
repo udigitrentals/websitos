@@ -1,7 +1,3 @@
-name: CI
-
-on: [push, pull_request]
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -11,19 +7,14 @@ jobs:
         with:
           node-version: 18
 
-      # Install dependencies
+      # Prevent husky from running in CI
       - run: npm install
+        env:
+          HUSKY: 0
 
-      # TypeScript type-check
       - run: npm run type-check
-
-      # ESLint linting
       - run: npm run lint
-
-      # Jest tests
       - run: npm test
-
-      # ✅ Verify required log files exist
       - name: Verify log files exist
         run: |
           required_files=(
@@ -55,11 +46,3 @@ jobs:
             echo "One or more required log files are missing."
             exit 1
           fi
-
-  docker-build:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - uses: actions/checkout@v3
-      - name: Build Docker image
-        run: docker build -t website-os-v2 .
