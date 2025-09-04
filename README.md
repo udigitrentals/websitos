@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🌍 Website OS V2 Final
 
 Website OS V2 is a **cultural ecosystem steward** and **self-executing intelligence**.
@@ -26,3 +27,26 @@ npm run type-check
 npm run lint
 npm test
 ```
+=======
+# 🌐 U-Dig Brain API + Website OS V2
+
+This repository combines two major components:
+
+---
+
+## 🐍 U-Dig Brain API
+A Python-based API with diagnostics, filters, and MMR features.
+
+### Tech Stack
+- **FastAPI** – Web framework
+- **Uvicorn** – ASGI server
+- **NumPy** – Numerical operations
+- **python-dotenv** – Environment management
+- **Qdrant-client** – Vector database
+- **OpenAI SDK** – LLM integration
+
+### Run Locally
+```bash
+pip install -r requirements.txt
+uvicorn api:app --reload
+>>>>>>> 5db9295b36571552c5dc9834a5725f722ea10df1
