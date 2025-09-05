@@ -1,0 +1,5 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Run lint-staged without stashing (avoids patch conflicts on Windows)
+npx lint-staged --no-stash --config .lintstagedrc.js
