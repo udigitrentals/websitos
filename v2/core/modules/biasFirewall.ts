@@ -14,7 +14,8 @@ interface BiasReport {
 }
 
 export function logBias(report: BiasReport) {
-  const entry = `\n## Ecosystem Bias Check: ${new Date().toISOString()}\n` +
+  const entry =
+    `\n## Ecosystem Bias Check: ${new Date().toISOString()}\n` +
     (report.tenant ? `- Tenant: ${report.tenant}\n` : "") +
     `- Template: ${report.template}\n` +
     `- Category: ${report.category}\n` +
@@ -27,7 +28,7 @@ export function logBias(report: BiasReport) {
 
 export function scanAndFixBias(filePath: string) {
   let content = fs.readFileSync(filePath, "utf-8");
-  let original = content;
+  const original = content; // ✅ const not let
 
   if (content.match(/whitelist/gi)) {
     content = content.replace(/whitelist/gi, "allowlist");
@@ -37,7 +38,7 @@ export function scanAndFixBias(filePath: string) {
       issue: "Use of 'whitelist'",
       severity: "medium",
       recommendation: "Replaced with 'allowlist'",
-      autoFixed: true
+      autoFixed: true,
     });
   }
 
@@ -49,7 +50,7 @@ export function scanAndFixBias(filePath: string) {
       issue: "Use of 'blacklist'",
       severity: "medium",
       recommendation: "Replaced with 'blocklist'",
-      autoFixed: true
+      autoFixed: true,
     });
   }
 
@@ -58,7 +59,7 @@ export function scanAndFixBias(filePath: string) {
   }
 }
 
-// CLI / CI runner
+// CLI / CI runner example
 if (require.main === module) {
   console.log("Running autonomous bias firewall...");
   const filesToScan = [

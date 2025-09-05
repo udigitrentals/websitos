@@ -1,11 +1,6 @@
 import fs from "fs";
 import path from "path";
 import { processFeedback } from "./feedback-loop";
-import { seed, grow, prune } from "./logging";
-
-
-
-
 
 const gardeningLog = path.resolve("docs/meta/gardening/phase6.md");
 const lineageLog = path.resolve("docs/meta/lineage.md");
@@ -39,10 +34,10 @@ export function runAutonomousRedesign(events: FeedbackEvent[]) {
 
     if (p.module === "GlobalUIProvider") {
       const configFile = path.resolve("v2/config/system.json");
-      let config = JSON.parse(fs.readFileSync(configFile, "utf-8"));
+      const config = JSON.parse(fs.readFileSync(configFile, "utf-8")); // ✅ const not let
 
       if (p.recommendation.includes("Optimize performance")) {
-        config.performanceOptimizations = true;
+        (config as any).performanceOptimizations = true;
         fs.writeFileSync(configFile, JSON.stringify(config, null, 2), "utf-8");
         logChange("grow", "system.json", "Enabled performanceOptimizations");
       }
@@ -55,7 +50,7 @@ if (require.main === module) {
   console.log("Running Autonomous Redesign Engine...");
   const sampleEvents: FeedbackEvent[] = [
     { module: "Navbar", event: "bounceRate", value: 75 },
-    { module: "GlobalUIProvider", event: "pageLoadTime", value: 4000 }
+    { module: "GlobalUIProvider", event: "pageLoadTime", value: 4000 },
   ];
   runAutonomousRedesign(sampleEvents);
   console.log("Autonomous redesign applied.");
