@@ -11,7 +11,7 @@ describe("Autonomy Simulation Test", () => {
     // 1. Autonomous redesign
     runAutonomousRedesign([
       { module: "Navbar", event: "bounceRate", value: 75 },
-      { module: "GlobalUIProvider", event: "pageLoadTime", value: 4000 }
+      { module: "GlobalUIProvider", event: "pageLoadTime", value: 4000 },
     ]);
 
     // 2. Myth reseeding

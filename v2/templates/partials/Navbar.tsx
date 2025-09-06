@@ -1,12 +1,25 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
-export default function Navbar() {
+export default function NavigationMenu() {
   return (
-    <nav role="navigation" aria-label="Main Navigation">
-      <ul>
-        <li><a href="#home">Home</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#contact">Contact</a></li>
+    <nav aria-label="Main navigation">
+      <ul className="flex space-x-6 p-4 bg-gray-100">
+        <li>
+          <Link to="/" className="text-blue-600 hover:underline">
+            Home
+          </Link>
+        </li>
+        <li>
+          <Link to="/about" className="text-blue-600 hover:underline">
+            About
+          </Link>
+        </li>
+        <li>
+          <Link to="/contact" className="text-blue-600 hover:underline">
+            Contact
+          </Link>
+        </li>
       </ul>
     </nav>
   );

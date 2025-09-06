@@ -49,7 +49,8 @@ export function updateMythCyclesAutonomous() {
     seeded.push(m);
   });
 
-  const logEntry = `\n## Cycle: ${new Date().toISOString()}\n` +
+  const logEntry =
+    `\n## Cycle: ${new Date().toISOString()}\n` +
     (pruned.length > 0 ? `Pruned myths: ${pruned.map((m) => m.name).join(", ")}\n` : "") +
     (seeded.length > 0 ? `Seeded myths: ${seeded.map((m) => m.name).join(", ")}\n` : "");
 

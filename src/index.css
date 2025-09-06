@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Covenant Buttons */
+.btn-primary {
+  @apply px-6 py-3 rounded-lg font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md;
+}
+
+.btn-gold {
+  @apply px-6 py-3 rounded-lg font-semibold text-black bg-amber-400 hover:bg-amber-500 shadow-md;
+}

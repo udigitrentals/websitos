@@ -12,7 +12,8 @@ interface GovernanceDecision {
 }
 
 function logDecision(decision: GovernanceDecision) {
-  const entry = `\n## Governance Decision: ${new Date().toISOString()}\n` +
+  const entry =
+    `\n## Governance Decision: ${new Date().toISOString()}\n` +
     `- Action: ${decision.action}\n` +
     `- Module: ${decision.module}\n` +
     `- Type: ${decision.type}\n` +
@@ -27,26 +28,30 @@ function logDecision(decision: GovernanceDecision) {
 export function decideAutonomy(action: string, module: string): GovernanceDecision {
   let decision: GovernanceDecision;
 
-  if (action.includes("bias fix") || action.includes("copy clarity") || action.includes("translation")) {
+  if (
+    action.includes("bias fix") ||
+    action.includes("copy clarity") ||
+    action.includes("translation")
+  ) {
     decision = {
       action,
       module,
       type: "auto-execute",
-      rationale: "Low cultural risk, safe for autonomous execution"
+      rationale: "Low cultural risk, safe for autonomous execution",
     };
   } else if (action.includes("archetype shift") || action.includes("tenant conflict")) {
     decision = {
       action,
       module,
       type: "treaty-required",
-      rationale: "High cultural impact, requires human reconciliation"
+      rationale: "High cultural impact, requires human reconciliation",
     };
   } else {
     decision = {
       action,
       module,
       type: "auto-execute",
-      rationale: "Default safe path"
+      rationale: "Default safe path",
     };
   }
 

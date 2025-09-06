@@ -28,7 +28,7 @@ export function logBias(report: BiasReport) {
 
 export function scanAndFixBias(filePath: string) {
   let content = fs.readFileSync(filePath, "utf-8");
-  const original = content; // ✅ const not let
+  const original = content;
 
   if (content.match(/whitelist/gi)) {
     content = content.replace(/whitelist/gi, "allowlist");
@@ -69,4 +69,52 @@ if (require.main === module) {
   ];
   filesToScan.forEach(scanAndFixBias);
   console.log("Bias scan + auto-refactor complete.");
+}
+
+/* -----------------------
+   🌱 Design Genome Fields
+------------------------ */
+
+export const id = "bias-firewall";
+
+export const fn = "Mitigates bias in cultural ecosystem decisions"; // ✅ replaces 'function'
+
+export const dependencies: string[] = [];
+
+export const gardener_role = "pruner";
+
+export const archetype = "BiasFirewall";
+
+export const myth_alignment = "Fairness Over Entropy";
+
+export const cultural_tags = ["fairness", "ethics", "resilience"];
+
+export const version = "1.0.0";
+
+export const scope = "core";
+
+export const ontology_forms = ["cultural", "ethical"];
+
+export async function apply() {
+  console.log("apply() not yet implemented in biasFirewall.ts");
+}
+
+export async function fallback() {
+  console.log("fallback() not yet implemented in biasFirewall.ts");
+}
+
+export async function negotiate() {
+  console.log("negotiate() not yet implemented in biasFirewall.ts");
+}
+
+export async function evolve() {
+  console.log("evolve() not yet implemented in biasFirewall.ts");
+}
+
+export async function coevolve() {
+  console.log("coevolve() not yet implemented in biasFirewall.ts");
+}
+
+export async function cultivate() {
+  console.log("cultivate() not yet implemented in biasFirewall.ts");
 }

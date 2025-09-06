@@ -46,9 +46,30 @@ jobs:
         if: matrix.language == 'node'
         run: npx prettier --check .
 
+      - name: Run Entropy Pruner
+        if: matrix.language == 'node'
+        run: npx ts-node v2/core/entropy-pruner.ts
+
+      - name: Run Schema Validator
+        if: matrix.language == 'node'
+        run: npm run validate
+
+      # ✅ Run all Jest tests including dashboard ones
       - name: Run Jest with coverage + JSON report
         if: matrix.language == 'node'
         run: npx jest --json --outputFile=jest-report.json --coverage --coverageReporters=json-summary --coverageReporters=lcov
+
+      - name: Enforce Coverage Threshold
+        if: matrix.language == 'node'
+        run: |
+          COVERAGE=$(npx jest --coverage --coverageReporters=text-summary | grep 'All files' | awk '{print $3}' | sed 's/%//')
+          echo "Coverage: $COVERAGE%"
+          if [ "$COVERAGE" -lt 80 ]; then
+            echo "❌ Coverage below 80%"
+            exit 1
+          else
+            echo "✅ Coverage above threshold"
+          fi
 
       - name: Upload Jest artifacts
         if: matrix.language == 'node'
@@ -59,6 +80,39 @@ jobs:
             jest-report.json
             coverage/
 
+      - name: Run Cultural Health Scorer
+        if: matrix.language == 'node'
+        run: npx ts-node v2/core/cultural-health-scorer.ts
+
+      - name: Check Cultural Health Thresholds
+        if: matrix.language == 'node'
+        run: |
+          node -e "
+          const fs = require('fs');
+          const log = fs.readFileSync('docs/meta/health.md','utf-8');
+          const lastReport = log.split('## Cultural Health Report').pop();
+          const vals = {};
+          ['Diversity','Coherence','Resilience','Beauty'].forEach(k=>{
+            const m = lastReport.match(new RegExp(`${k}: (-?\\\\d+(?:\\\\.\\\\d+)?)`));
+            vals[k] = m ? parseFloat(m[1]) : 0;
+          });
+          console.log('Latest Cultural Health:', vals);
+          if(vals.Diversity < -0.2 || vals.Coherence < 0.3 || vals.Resilience < 0.3 || vals.Beauty < 0.2) {
+            console.error('❌ Cultural Health below thresholds, blocking merge');
+            process.exit(1);
+          } else {
+            console.log('✅ Cultural Health above thresholds');
+          }"
+
+      - name: Upload Cultural Health Reports
+        if: matrix.language == 'node'
+        uses: actions/upload-artifact@v4
+        with:
+          name: cultural-health-reports
+          path: |
+            docs/meta/health.md
+            docs/meta/health-history.json
+
       # ----------------------
       # Python (FastAPI backend)
       # ----------------------
@@ -66,8 +120,8 @@ jobs:
         if: matrix.language == 'python'
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
-          cache: 'pip'
+          python-version: "3.10"
+          cache: "pip"
 
       - name: Install Python deps
         if: matrix.language == 'python'
@@ -78,8 +132,8 @@ jobs:
       - name: Run pytest with coverage + JSON report
         if: matrix.language == 'python'
         run: PYTHONPATH=. pytest --maxfail=1 --disable-warnings -q \
-              --json-report --json-report-file=pytest-report.json \
-              --cov=. --cov-report=xml
+          --json-report --json-report-file=pytest-report.json \
+          --cov=. --cov-report=xml
 
       - name: Upload pytest artifacts
         if: matrix.language == 'python'

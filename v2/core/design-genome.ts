@@ -10,7 +10,7 @@ export const GenomeSchema = z.object({
   cultural_tags: z.array(z.string()),
   version: z.string().regex(/^v[0-9]+\.[0-9]+$/),
   lineage: z.string(), // path to lineage log
-  cultural_weight: z.number().min(0).max(100)
+  cultural_weight: z.number().min(0).max(100),
 });
 
 export type Genome = z.infer<typeof GenomeSchema>;
@@ -18,9 +18,7 @@ export type Genome = z.infer<typeof GenomeSchema>;
 export function validateGenome(module: Genome) {
   const parsed = GenomeSchema.safeParse(module);
   if (!parsed.success) {
-    throw new Error(
-      `Genome validation failed: ${JSON.stringify(parsed.error.issues)}`
-    );
+    throw new Error(`Genome validation failed: ${JSON.stringify(parsed.error.issues)}`);
   }
   return parsed.data;
 }

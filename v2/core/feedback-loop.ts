@@ -3,8 +3,6 @@ import path from "path";
 
 const dragFile = path.resolve("docs/meta/drag.md");
 
-
-
 interface FeedbackEvent {
   module: string;
   event: string;
@@ -23,19 +21,19 @@ export function processFeedback(events: FeedbackEvent[]): RedesignProposal[] {
     if (e.event === "bounceRate" && e.value > 70) {
       proposals.push({
         module: e.module,
-        recommendation: "Reduce bounce rate: improve copy clarity and navigation flow."
+        recommendation: "Reduce bounce rate: improve copy clarity and navigation flow.",
       });
     }
     if (e.event === "formErrorRate" && e.value > 10) {
       proposals.push({
         module: e.module,
-        recommendation: "Fix form validation UX and add inline error recovery."
+        recommendation: "Fix form validation UX and add inline error recovery.",
       });
     }
     if (e.event === "pageLoadTime" && e.value > 3000) {
       proposals.push({
         module: e.module,
-        recommendation: "Optimize performance: lazy load heavy assets."
+        recommendation: "Optimize performance: lazy load heavy assets.",
       });
     }
   }
@@ -56,7 +54,7 @@ if (require.main === module) {
   const sampleEvents: FeedbackEvent[] = [
     { module: "Navbar", event: "bounceRate", value: 75 },
     { module: "FormProvider", event: "formErrorRate", value: 15 },
-    { module: "GlobalUIProvider", event: "pageLoadTime", value: 3200 }
+    { module: "GlobalUIProvider", event: "pageLoadTime", value: 3200 },
   ];
 
   const results = processFeedback(sampleEvents);
